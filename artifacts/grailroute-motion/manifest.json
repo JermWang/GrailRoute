@@ -1,6 +1,6 @@
 {
   "title": "GrailRoute Motion Demo",
-  "source": "Sitewide Polishing and Motion Video/GrailRoute-Video.dc.html",
+  "source": "docs/design/sitewide-polishing-and-motion-video/GrailRoute-Video.dc.html",
   "output": "GrailRoute-Motion-Demo-1920x1080.mp4",
   "resolution": {
     "width": 1920,

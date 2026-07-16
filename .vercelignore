@@ -1,0 +1,19 @@
+# Platform-specific tooling and non-runtime source material
+.openai
+.vinext
+.wrangler
+artifacts
+build
+db
+docs
+drizzle
+examples
+scripts
+tests
+worker
+
+# Local documentation and Cloudflare-only configuration
+CONCEPT_BRIEF.md
+design-qa.md
+drizzle.config.ts
+vite.config.ts

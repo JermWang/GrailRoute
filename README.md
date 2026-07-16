@@ -1,98 +1,68 @@
-# vinext-starter
+# GrailRoute
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+GrailRoute is a wallet-native Pokémon TCG marketplace concept built around authenticated physical cards, 1:1 digital titles, intent-based routing, and atomic settlement on Robinhood Chain.
 
-## Prerequisites
+## Project layout
 
-- Node.js `>=22.13.0`
+```text
+app/            Next.js application and UI
+public/         Production images, video, icons, and social preview
+artifacts/      Final downloadable creative exports
+docs/design/    Claude Design handoff and motion source
+scripts/        Reproducible creative-export tooling
+tests/          Server-rendered application checks
 
-## Quick Start
+build/          OpenAI Sites build integration
+db/             Optional Cloudflare D1 layer
+worker/         OpenAI Sites worker entrypoint
+```
+
+The deployable web application lives at the repository root. Do not select `app/` as a separate Vercel Root Directory.
+
+## Vercel deployment
+
+Import `JermWang/GrailRoute` from GitHub with these settings:
+
+- Root Directory: `./`
+- Framework Preset: Next.js
+- Install Command: `npm ci`
+- Build Command: `npm run build:vercel`
+- Output Directory: leave blank so Vercel uses the Next.js default
+
+The committed `vercel.json` supplies the framework, install, development, and build settings automatically. Every GitHub push can therefore use the native Next.js build instead of the Cloudflare/Vinext build.
+
+## Local development
+
+For the Vercel/Next.js runtime:
 
 ```bash
-npm install
+npm ci
 npm run dev
 npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+For the existing OpenAI Sites runtime:
 
-## Included Shape
-
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
-
-## Workspace Auth Headers
-
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```bash
+npm run dev:sites
+npm run build:sites
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+## Environment
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+Copy `.env.example` to `.env.local` when a GrailRoute asset contract is available:
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+```text
+NEXT_PUBLIC_GRAILROUTE_ASSET_CONTRACT=0x...
+```
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+Without that value, wallet discovery, account connection, network switching, and native balances still work; the application truthfully reports that no tokenized-card contract is configured.
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+## Useful commands
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+- `npm test` — validate the Sites build and server-rendered shell
+- `npm run lint` — check application source
+- `npm run video:render` — regenerate the 15-second full-HD motion film
+- `npm run db:generate` — generate optional D1 migrations
 
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+See Vercel’s official [Next.js deployment guide](https://vercel.com/docs/frameworks/full-stack/nextjs) and [project configuration reference](https://vercel.com/docs/project-configuration/vercel-json) for platform details.

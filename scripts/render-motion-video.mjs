@@ -7,8 +7,8 @@ import ffmpeg from "@ffmpeg-installer/ffmpeg";
 import { chromium } from "playwright-core";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const sourceDir = path.join(root, "Sitewide Polishing and Motion Video");
-const exportDir = path.join(root, "exports", "grailroute-motion");
+const sourceDir = path.join(root, "docs", "design", "sitewide-polishing-and-motion-video");
+const exportDir = path.join(root, "artifacts", "grailroute-motion");
 const frameDir = path.join(exportDir, ".frames");
 const publicVideoDir = path.join(root, "public", "video");
 const exportVideo = path.join(exportDir, "GrailRoute-Motion-Demo-1920x1080.mp4");
@@ -110,7 +110,7 @@ try {
 
   const manifest = {
     title: "GrailRoute Motion Demo",
-    source: "Sitewide Polishing and Motion Video/GrailRoute-Video.dc.html",
+    source: "docs/design/sitewide-polishing-and-motion-video/GrailRoute-Video.dc.html",
     output: "GrailRoute-Motion-Demo-1920x1080.mp4",
     resolution: { width: 1920, height: 1080 },
     fps,

@@ -3,14 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=22.13.0"
+    "node": "22.x"
   },
   "scripts": {
-    "dev": "vinext dev",
-    "build": "vinext build",
-    "start": "vinext start",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern \"Sitewide Polishing and Motion Video\"",
+    "dev": "next dev",
+    "dev:sites": "vinext dev",
+    "dev:vercel": "next dev",
+    "build": "next build",
+    "build:sites": "vinext build",
+    "build:vercel": "next build",
+    "start": "next start",
+    "start:sites": "vinext start",
+    "start:vercel": "next start",
+    "test": "npm run build:sites && node --test tests/rendered-html.test.mjs",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern docs",
     "video:render": "node scripts/render-motion-video.mjs",
     "db:generate": "drizzle-kit generate"
   },

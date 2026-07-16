@@ -50,6 +50,9 @@ npm run build:sites
 
 ## Environment
 
+See [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md) for every variable, what reads
+it, and where to set it.
+
 Copy `.env.example` to `.env.local`:
 
 ```text

@@ -11,22 +11,22 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(origin),
-    title: "GrailRoute — Connect your Pokémon collection onchain",
-    description: "Connect an EVM wallet and access real tokenized Pokémon TCG assets on Robinhood Chain.",
+    title: "GrailRoute — Trade your way to the grail",
+    description: "Vault authenticated Pokémon cards, route digital titles, and prepare for atomic settlement on Robinhood Chain.",
     icons: {
       icon: "/favicon.png",
       shortcut: "/favicon.png",
     },
     openGraph: {
-      title: "GrailRoute — Your Pokémon collection, onchain",
-      description: "Connect an EVM wallet to read real tokenized Pokémon TCG assets on Robinhood Chain.",
+      title: "GrailRoute — Trade your way to the grail",
+      description: "Vault authenticated Pokémon cards and route toward the exact collectible you want on Robinhood Chain.",
       type: "website",
-      images: [{ url: new URL("/og.png", origin).toString(), width: 1200, height: 630, alt: "GrailRoute verified Pokémon TCG trading route" }],
+      images: [{ url: new URL("/og.png", origin).toString(), width: 1920, height: 1080, alt: "GrailRoute Pokémon TCG route toward a Charizard grail" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "GrailRoute — Your Pokémon collection, onchain",
-      description: "Real wallets. Real assets. No placeholders.",
+      title: "GrailRoute — Trade your way to the grail",
+      description: "Vault, route, and settle collectible ownership on Robinhood Chain.",
       images: [new URL("/og.png", origin).toString()],
     },
   };

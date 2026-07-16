@@ -1,0 +1,15 @@
+{
+  "title": "GrailRoute Motion Demo",
+  "source": "Sitewide Polishing and Motion Video/GrailRoute-Video.dc.html",
+  "output": "GrailRoute-Motion-Demo-1920x1080.mp4",
+  "resolution": {
+    "width": 1920,
+    "height": 1080
+  },
+  "fps": 30,
+  "durationSeconds": 15,
+  "codec": "H.264",
+  "pixelFormat": "yuv420p",
+  "audio": "none",
+  "renderedAt": "2026-07-16T06:40:41.405Z"
+}

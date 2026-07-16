@@ -10,7 +10,8 @@
     "build": "vinext build",
     "start": "vinext start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern \"Sitewide Polishing and Motion Video\"",
+    "video:render": "node scripts/render-motion-video.mjs",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",
     "@cloudflare/workers-types": "^4.20260702.1",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
@@ -33,6 +35,7 @@
     "drizzle-kit": "0.31.10",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
+    "playwright-core": "^1.61.1",
     "react-server-dom-webpack": "19.2.6",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",

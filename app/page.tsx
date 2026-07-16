@@ -8,13 +8,16 @@ import {
   CheckCircle,
   ClockCounterClockwise,
   Copy,
+  DownloadSimple,
   ArrowSquareOut,
   Globe,
   Path,
   Pause,
   Play,
+  PlayCircle,
   PlugsConnected,
   Power,
+  SealCheck,
   ShieldCheck,
   Sparkle,
   Wallet,
@@ -67,6 +70,21 @@ const WALLET_DOWNLOADS = [
   { name: "Coinbase Wallet", href: "https://www.coinbase.com/wallet/downloads" },
   { name: "Brave Wallet", href: "https://brave.com/wallet/" },
 ];
+
+const SHOWCASE_CARDS = [
+  { name: "Charizard", set: "Base Set", number: "#4/102", image: "/pokemon/base-set-charizard.png" },
+  { name: "Blastoise", set: "Base Set", number: "#2/102", image: "/pokemon/base-set-blastoise.png" },
+  { name: "Venusaur", set: "Base Set", number: "#15/102", image: "/pokemon/base-set-venusaur.png" },
+  { name: "Pikachu", set: "Base Set", number: "#58/102", image: "/pokemon/base-set-pikachu.png" },
+  { name: "Mewtwo", set: "Base Set", number: "#10/102", image: "/pokemon/base-set-mewtwo.png" },
+] as const;
+
+const CAPABILITIES = [
+  { value: "Atomic", title: "All-or-nothing settlement", copy: "Every route leg is designed to move together—or nothing moves." },
+  { value: "1:1", title: "Redeemable digital titles", copy: "One onchain title represents one authenticated physical slab." },
+  { value: "Wallet", title: "Self-custody by default", copy: "Connect through your own EVM provider without sharing private keys." },
+  { value: "2", title: "Robinhood Chain environments", copy: "Mainnet for production and testnet for learning the flow." },
+] as const;
 
 const DEMO_STEPS = [
   {
@@ -168,6 +186,67 @@ function EmptyState({ icon, title, copy, action }: { icon: React.ReactNode; titl
       <p>{copy}</p>
       {action}
     </div>
+  );
+}
+
+function HeroShowcase() {
+  const [activeCard, setActiveCard] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => setActiveCard((current) => (current + 1) % SHOWCASE_CARDS.length), 3200);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  return (
+    <aside className="hero-showcase" aria-label="Illustrative Pokémon card references">
+      <div className="showcase-label"><span className="stage-live-dot" /> Pokémon TCG visual references</div>
+      <div className="showcase-stack">
+        {SHOWCASE_CARDS.map((card, index) => {
+          let offset = index - activeCard;
+          if (offset > SHOWCASE_CARDS.length / 2) offset -= SHOWCASE_CARDS.length;
+          if (offset < -SHOWCASE_CARDS.length / 2) offset += SHOWCASE_CARDS.length;
+          const distance = Math.abs(offset);
+          const style = {
+            "--card-offset": offset,
+            "--card-scale": distance === 0 ? 1 : distance === 1 ? .84 : .7,
+            "--card-opacity": distance > 2 ? 0 : distance === 2 ? .38 : distance === 1 ? .76 : 1,
+            "--card-z": 20 - distance,
+            "--card-blur": `${distance >= 2 ? 2.5 : 0}px`,
+          } as React.CSSProperties;
+          return (
+            <button key={card.name} className={`showcase-card ${distance === 0 ? "active" : ""}`} style={style} onClick={() => setActiveCard(index)} aria-label={`Show ${card.name} ${card.set}`}>
+              <span className="showcase-slab">
+                <span className="slab-header"><strong><SealCheck size={14} weight="fill" /> Base Set</strong><em>Reference</em></span>
+                <span className="slab-art"><img src={card.image} alt={`${card.name} Pokémon card from ${card.set}`} /></span>
+                <span className="slab-meta"><strong>{card.name}</strong><em>{card.number}</em></span>
+                {distance === 0 && <span className="slab-sheen" />}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <div className="showcase-badges"><span><ShieldCheck size={15} /> Illustrative only</span><span><Globe size={15} /> Live wallet data below</span></div>
+      <div className="showcase-dots">{SHOWCASE_CARDS.map((card, index) => <button key={card.name} onClick={() => setActiveCard(index)} className={index === activeCard ? "active" : ""} aria-label={`Show ${card.name}`} />)}</div>
+      <p>Card imagery demonstrates the product concept and is not connected-wallet inventory.</p>
+    </aside>
+  );
+}
+
+function MotionFilm() {
+  return (
+    <section className="motion-film reveal-section" id="motion-film" aria-labelledby="motion-film-title">
+      <div className="motion-film-heading">
+        <div><span className="eyebrow"><PlayCircle size={17} weight="duotone" /> 15-second product story</span><h2 id="motion-film-title">From physical grail to onchain route.</h2></div>
+        <div><p>A cinematic overview of vaulting, digital titles, route discovery, and atomic settlement on Robinhood Chain.</p><a href="/grailroute-motion-demo.mp4" download><DownloadSimple size={17} /> Download video</a></div>
+      </div>
+      <div className="motion-film-frame">
+        <span className="film-corner film-corner-one" /><span className="film-corner film-corner-two" />
+        <video controls muted playsInline preload="metadata" poster="/video/grailroute-motion-poster.jpg" aria-label="GrailRoute product motion graphic">
+          <source src="/grailroute-motion-demo.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </section>
   );
 }
 
@@ -553,26 +632,22 @@ export default function Home() {
         <section className="wallet-hero">
           <div className="hero-copy">
             <span className="eyebrow"><Sparkle size={17} weight="fill" /> Wallet-native Pokémon TCG market</span>
-            <h1>Your real onchain collection. No placeholders.</h1>
-            <p>Connect an installed EVM wallet to read your authentic tokenized-card balance, switch to Robinhood Chain, and prepare for contract-backed trading.</p>
+            <h1>Trade your way<br />to the <span>grail.</span></h1>
+            <p>Vault authenticated cards, hold a 1:1 redeemable title, and let intent-based routing move you toward the exact Pokémon card you want—settled atomically on Robinhood Chain.</p>
             <div className="hero-actions">
               <button className="primary-button" onClick={() => setWalletOpen(true)}>{connected ? "Manage wallet" : "Connect EVM wallet"} <ArrowRight size={19} /></button>
-              <a className="text-link" href="#how-it-works">See how it works <ArrowRight size={15} /></a>
+              <a className="text-link" href="#motion-film">Watch the story <PlayCircle size={17} /></a>
+              <a className="text-link" href="#how-it-works">Explore the flow <ArrowRight size={15} /></a>
               <a className="text-link" href="https://docs.robinhood.com/chain/add-network-to-wallet/" target="_blank" rel="noreferrer">Robinhood Chain details <ArrowSquareOut size={15} /></a>
             </div>
             <div className="trust-row"><span><ShieldCheck size={17} /> Non-custodial</span><span><PlugsConnected size={17} /> EIP-6963 discovery</span><span><Globe size={17} /> Mainnet + testnet</span></div>
           </div>
-          <aside className="connection-card">
-            <div className="connection-card-header"><span>Connection status</span><strong className={connected ? "success" : ""}>{connected ? "Live" : "Not connected"}</strong></div>
-            <div className="connection-visual"><span className={connected ? "wallet-orb connected" : "wallet-orb"}><Wallet size={29} /></span><span className="connection-line" /><span className={activeChain ? "chain-orb connected" : "chain-orb"}>R</span></div>
-            <dl>
-              <div><dt>Wallet</dt><dd>{connectedWallet?.info.name ?? "Waiting for connection"}</dd></div>
-              <div><dt>Address</dt><dd>{address ? shortAddress(address) : "—"}</dd></div>
-              <div><dt>Network</dt><dd>{activeChain?.shortName ?? (connected ? "Unsupported" : "—")}</dd></div>
-              <div><dt>Balance</dt><dd>{connected ? `${balance || "0"} ETH` : "—"}</dd></div>
-            </dl>
-          </aside>
+          <HeroShowcase />
         </section>
+
+        <section className="capability-strip reveal-section" aria-label="GrailRoute capabilities">{CAPABILITIES.map((item) => <article key={item.title}><strong>{item.value}</strong><h2>{item.title}</h2><p>{item.copy}</p></article>)}</section>
+
+        <MotionFilm />
 
         <ProductWalkthrough onConnect={() => setWalletOpen(true)} />
 

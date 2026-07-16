@@ -16,12 +16,14 @@ test("server-renders the GrailRoute application shell", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /<title>GrailRoute/);
-  assert.match(html, /Your real onchain collection/);
+  assert.match(html, /Trade your way/);
+  assert.match(html, /From physical grail to onchain route/);
+  assert.match(html, /grailroute-motion-demo\.mp4/);
   assert.match(html, /Connect EVM wallet/);
   assert.match(html, /See the complete journey before you sign/);
   assert.match(html, /Best ways to use GrailRoute/);
   assert.match(html, /Connect.*Vault.*Target.*Route.*Sign/s);
   assert.match(html, /Pokémon TCG marketplace/);
-  assert.match(html, /No placeholders/);
+  assert.match(html, /not connected-wallet inventory/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/);
 });

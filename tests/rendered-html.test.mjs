@@ -18,6 +18,9 @@ test("server-renders the GrailRoute application shell", async () => {
   assert.match(html, /<title>GrailRoute/);
   assert.match(html, /Your real onchain collection/);
   assert.match(html, /Connect EVM wallet/);
+  assert.match(html, /See the complete journey before you sign/);
+  assert.match(html, /Best ways to use GrailRoute/);
+  assert.match(html, /Connect.*Vault.*Target.*Route.*Sign/s);
   assert.match(html, /Pokémon TCG marketplace/);
   assert.match(html, /No placeholders/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/);

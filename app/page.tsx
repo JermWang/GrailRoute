@@ -11,6 +11,8 @@ import {
   ArrowSquareOut,
   Globe,
   Path,
+  Pause,
+  Play,
   PlugsConnected,
   Power,
   ShieldCheck,
@@ -65,6 +67,51 @@ const WALLET_DOWNLOADS = [
   { name: "Coinbase Wallet", href: "https://www.coinbase.com/wallet/downloads" },
   { name: "Brave Wallet", href: "https://brave.com/wallet/" },
 ];
+
+const DEMO_STEPS = [
+  {
+    label: "Connect",
+    title: "Connect the wallet you already use",
+    copy: "Choose an installed EVM wallet and switch to Robinhood Chain. GrailRoute only requests account access—never your seed phrase.",
+    signal: "Wallet authenticated",
+    icon: Wallet,
+  },
+  {
+    label: "Vault",
+    title: "Turn a verified slab into an onchain title",
+    copy: "An authenticated Pokémon card enters secure custody. Its digital title is issued 1:1 so ownership can move without shipping the slab for every trade.",
+    signal: "Card title issued",
+    icon: ShieldCheck,
+  },
+  {
+    label: "Target",
+    title: "Name the exact grail you want",
+    copy: "Select the Pokémon, set, card number, and grade. Precise targets give the routing engine a cleaner path to search.",
+    signal: "Target locked",
+    icon: CardsThree,
+  },
+  {
+    label: "Route",
+    title: "Review the path—not just the destination",
+    copy: "GrailRoute can surface a direct swap or a multi-party loop built from verified digital titles. Every leg stays visible before you approve it.",
+    signal: "Route assembled",
+    icon: Path,
+  },
+  {
+    label: "Sign",
+    title: "Approve once the terms are right",
+    copy: "Confirm the network, assets, and route in your wallet. Atomic settlement is designed so the complete route settles together or nothing moves.",
+    signal: "Ready to settle",
+    icon: CheckCircle,
+  },
+] as const;
+
+const USE_TIPS = [
+  { number: "01", title: "Be specific", copy: "Use the exact Pokémon, set, number, and grade when setting a target." },
+  { number: "02", title: "Vault first", copy: "Authenticated titles are what make a card eligible for onchain routing." },
+  { number: "03", title: "Inspect every leg", copy: "Check each asset and participant before approving a multi-party route." },
+  { number: "04", title: "Learn on testnet", copy: "Practice the wallet and signing flow on Robinhood Chain Testnet first." },
+] as const;
 
 function shortAddress(address: string) {
   return `${address.slice(0, 6)}…${address.slice(-4)}`;
@@ -121,6 +168,96 @@ function EmptyState({ icon, title, copy, action }: { icon: React.ReactNode; titl
       <p>{copy}</p>
       {action}
     </div>
+  );
+}
+
+function ProductWalkthrough({ onConnect }: { onConnect: () => void }) {
+  const [activeStep, setActiveStep] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const active = DEMO_STEPS[activeStep];
+  const ActiveIcon = active.icon;
+
+  useEffect(() => {
+    if (paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => {
+      setActiveStep((current) => (current + 1) % DEMO_STEPS.length);
+    }, 4200);
+    return () => window.clearInterval(timer);
+  }, [paused]);
+
+  function selectStep(index: number) {
+    setActiveStep(index);
+    setPaused(true);
+  }
+
+  return (
+    <section className="product-demo" id="how-it-works" aria-labelledby="demo-title">
+      <header className="demo-heading">
+        <div>
+          <span className="eyebrow"><Path size={16} /> Product walkthrough</span>
+          <h2 id="demo-title">See the complete journey before you sign.</h2>
+          <p>Follow a Pokémon card from a self-custody wallet to an atomic GrailRoute settlement.</p>
+        </div>
+        <button className="demo-playback" onClick={() => setPaused((current) => !current)} aria-label={paused ? "Play walkthrough" : "Pause walkthrough"}>
+          {paused ? <Play size={16} weight="fill" /> : <Pause size={16} weight="fill" />}
+          {paused ? "Play demo" : "Pause demo"}
+        </button>
+      </header>
+
+      <div className="demo-grid">
+        <div className="demo-step-list" role="tablist" aria-label="GrailRoute product steps">
+          {DEMO_STEPS.map((step, index) => {
+            const StepIcon = step.icon;
+            return (
+              <button
+                key={step.label}
+                role="tab"
+                aria-selected={activeStep === index}
+                aria-controls="demo-stage-panel"
+                className={activeStep === index ? "active" : ""}
+                onClick={() => selectStep(index)}
+              >
+                <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
+                <span className="step-icon"><StepIcon size={20} /></span>
+                <span><strong>{step.label}</strong><em>{step.title}</em></span>
+                <ArrowRight className="step-arrow" size={17} />
+              </button>
+            );
+          })}
+        </div>
+
+        <div className={`demo-stage demo-stage-${activeStep}`} id="demo-stage-panel" role="tabpanel">
+          <div className="stage-topline">
+            <span><span className="stage-live-dot" /> Guided product demo</span>
+            <strong>Step {activeStep + 1} of {DEMO_STEPS.length}</strong>
+          </div>
+          <div className="route-map" aria-hidden="true">
+            <span className="route-map-line"><span style={{ width: `${(activeStep / (DEMO_STEPS.length - 1)) * 100}%` }} /></span>
+            <div className="route-map-nodes">
+              {DEMO_STEPS.map((step, index) => {
+                const StepIcon = step.icon;
+                return <span key={step.label} className={index < activeStep ? "complete" : index === activeStep ? "current" : ""}><StepIcon size={18} weight={index <= activeStep ? "fill" : "regular"} /></span>;
+              })}
+            </div>
+          </div>
+          <div className="stage-card" key={active.label}>
+            <span className="stage-card-icon"><ActiveIcon size={32} weight="duotone" /></span>
+            <span className="stage-signal"><CheckCircle size={14} weight="fill" /> {active.signal}</span>
+            <h3>{active.title}</h3>
+            <p>{active.copy}</p>
+          </div>
+          <div className="stage-footer">
+            <span><ShieldCheck size={16} /> Clear terms before every signature</span>
+            <button onClick={onConnect}>Try with your wallet <ArrowRight size={16} /></button>
+          </div>
+        </div>
+      </div>
+
+      <div className="use-guide">
+        <div className="use-guide-title"><span>Best ways to use GrailRoute</span><p>Four habits for a cleaner, safer route.</p></div>
+        {USE_TIPS.map((tip) => <article key={tip.number}><span>{tip.number}</span><h3>{tip.title}</h3><p>{tip.copy}</p></article>)}
+      </div>
+    </section>
   );
 }
 
@@ -420,6 +557,7 @@ export default function Home() {
             <p>Connect an installed EVM wallet to read your authentic tokenized-card balance, switch to Robinhood Chain, and prepare for contract-backed trading.</p>
             <div className="hero-actions">
               <button className="primary-button" onClick={() => setWalletOpen(true)}>{connected ? "Manage wallet" : "Connect EVM wallet"} <ArrowRight size={19} /></button>
+              <a className="text-link" href="#how-it-works">See how it works <ArrowRight size={15} /></a>
               <a className="text-link" href="https://docs.robinhood.com/chain/add-network-to-wallet/" target="_blank" rel="noreferrer">Robinhood Chain details <ArrowSquareOut size={15} /></a>
             </div>
             <div className="trust-row"><span><ShieldCheck size={17} /> Non-custodial</span><span><PlugsConnected size={17} /> EIP-6963 discovery</span><span><Globe size={17} /> Mainnet + testnet</span></div>
@@ -435,6 +573,8 @@ export default function Home() {
             </dl>
           </aside>
         </section>
+
+        <ProductWalkthrough onConnect={() => setWalletOpen(true)} />
 
         <section className="data-workspace">
           <div className="workspace-heading">

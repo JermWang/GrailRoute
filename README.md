@@ -50,13 +50,20 @@ npm run build:sites
 
 ## Environment
 
-Copy `.env.example` to `.env.local` when a GrailRoute asset contract is available:
+Copy `.env.example` to `.env.local`:
 
 ```text
-NEXT_PUBLIC_GRAILROUTE_ASSET_CONTRACT=0x...
+NEXT_PUBLIC_GRAILROUTE_ASSET_CONTRACT=0x...   # optional
+NEXT_PUBLIC_SITE_URL=https://your-domain.com  # optional
 ```
 
-Without that value, wallet discovery, account connection, network switching, and native balances still work; the application truthfully reports that no tokenized-card contract is configured.
+Without an asset contract, wallet discovery, account connection, network switching, and native balances still work; the application truthfully reports that no tokenized-card contract is configured.
+
+`NEXT_PUBLIC_SITE_URL` sets the canonical origin for metadata, Open Graph images, `robots.txt`, and `sitemap.xml`. On Vercel it is inferred from `VERCEL_PROJECT_PRODUCTION_URL`, so it is only needed for a custom domain or another host. It is deliberately not read from request headers: doing so would opt every route out of static generation.
+
+## Onchain data policy
+
+Wallet reads are routed through the connected EVM provider, so they answer for whatever network that wallet is on. GrailRoute therefore checks `eth_chainId` first and refuses to read balances off Robinhood Chain, showing a "Switch to Robinhood Chain" prompt instead. Data from another chain is never rendered as GrailRoute inventory.
 
 ## Useful commands
 

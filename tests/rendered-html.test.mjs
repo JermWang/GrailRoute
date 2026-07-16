@@ -16,8 +16,9 @@ test("server-renders the GrailRoute application shell", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /<title>GrailRoute/);
-  assert.match(html, /A smarter path to the card you want/);
-  assert.match(html, /Trade your way to the grail/);
+  assert.match(html, /Trade your way to the Pokémon grail you want/);
+  assert.match(html, /Pokémon TCG route/);
+  assert.match(html, /Pokémon TCG marketplace/);
   assert.match(html, /How it works/);
   assert.match(html, /Accept route/);
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview|Your site is taking shape/);

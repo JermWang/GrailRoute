@@ -201,7 +201,8 @@ function TopBar({
   return (
     <header className="topbar">
       <button className="brand" onClick={() => setActiveView("routes")} aria-label="Go to GrailRoute home">
-        Grail<span>Route</span>
+        <span className="brand-wordmark">Grail<strong>Route</strong></span>
+        <small>Pokémon TCG marketplace</small>
       </button>
 
       <nav className={`primary-nav ${mobileOpen ? "mobile-open" : ""}`} aria-label="Primary navigation">
@@ -226,8 +227,8 @@ function TopBar({
         <MagnifyingGlass size={18} aria-hidden="true" />
         <input
           id="global-card-search"
-          aria-label="Search cards, sets, or collectors"
-          placeholder="Search cards, sets, or collectors"
+          aria-label="Search Pokémon cards, sets, or collectors"
+          placeholder="Search Pokémon, sets, or collectors"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onFocus={() => activeView !== "discover" && setActiveView("discover")}
@@ -410,9 +411,9 @@ function RoutesView({ onAccept, onAdjust, tipVisible, dismissTip }: { onAccept: 
         <div className="route-workspace">
           <div className="route-main">
             <div className="hero-copy">
-              <span className="page-kicker"><CirclesThreePlus size={18} /> Multi-party route · 3 collectors</span>
-              <h1>A smarter path to the card you want.</h1>
-              <p>Discover and settle verified trade routes in one transaction on Robinhood Chain.</p>
+              <span className="page-kicker"><CirclesThreePlus size={18} /> Pokémon TCG route · 3 collectors</span>
+              <h1>Trade your way to the Pokémon grail you want.</h1>
+              <p>Route authenticated Pokémon TCG cards between verified collectors and settle every leg together on Robinhood Chain.</p>
             </div>
             <RouteMap tipVisible={tipVisible} onTipDismiss={dismissTip} />
           </div>
@@ -429,7 +430,10 @@ function DiscoverView({ query, setQuery, onTarget }: { query: string; setQuery: 
   const visibleCards = useMemo(() => {
     return cards.filter((card) => {
       const matchesQuery = `${card.name} ${card.set}`.toLowerCase().includes(query.toLowerCase());
-      const matchesFilter = filter === "All" || card.era === filter || (filter === "Under $1k" && card.value < 1000);
+      const matchesFilter = filter === "All"
+        || card.era === filter
+        || (filter === "Kanto" && ["Charizard", "Blastoise", "Mewtwo"].includes(card.name))
+        || (filter === "Under $1k" && card.value < 1000);
       return matchesQuery && matchesFilter;
     });
   }, [filter, query]);
@@ -438,21 +442,21 @@ function DiscoverView({ query, setQuery, onTarget }: { query: string; setQuery: 
     <main className="catalog-view">
       <div className="catalog-heading">
         <div>
-          <span className="page-kicker"><MagnifyingGlass size={18} /> Curated and custody verified</span>
-          <h1>Find your next grail.</h1>
-          <p>Set any card as a target. GrailRoute will search every compatible collection, not just active listings.</p>
+          <span className="page-kicker"><MagnifyingGlass size={18} /> Authenticated Pokémon TCG inventory</span>
+          <h1>Find your next Pokémon grail.</h1>
+          <p>Target a Charizard, Eeveelution, vintage holo, or modern chase card. GrailRoute searches every compatible Pokémon collection—not only active listings.</p>
         </div>
         <button className="primary-button compact-button"><Bell size={18} /> Create an alert</button>
       </div>
       <div className="filter-row" aria-label="Card filters">
-        {["All", "Vintage", "Modern", "Under $1k"].map((item) => (
+        {["All", "Vintage", "Modern", "Kanto", "Under $1k"].map((item) => (
           <button key={item} className={filter === item ? "filter-active" : ""} onClick={() => setFilter(item)}>{item}</button>
         ))}
         <span>{visibleCards.length} verified cards</span>
       </div>
       <label className="catalog-search-mobile">
         <MagnifyingGlass size={18} aria-hidden="true" />
-        <input aria-label="Search the card catalog" placeholder="Search cards or sets" value={query} onChange={(event) => setQuery(event.target.value)} />
+        <input aria-label="Search the Pokémon card catalog" placeholder="Search Pokémon or sets" value={query} onChange={(event) => setQuery(event.target.value)} />
       </label>
       {visibleCards.length ? (
         <div className="card-grid">
@@ -479,7 +483,7 @@ function DiscoverView({ query, setQuery, onTarget }: { query: string; setQuery: 
         <div className="empty-state">
           <MagnifyingGlass size={32} />
           <h2>No cards match that search.</h2>
-          <p>Try another card name, set, or collector.</p>
+          <p>Try another Pokémon, expansion, or collector.</p>
         </div>
       )}
     </main>
@@ -499,9 +503,9 @@ function VaultView({ onCreateRoute }: { onCreateRoute: (selected: Card[]) => voi
     <main className="vault-view">
       <div className="catalog-heading">
         <div>
-          <span className="page-kicker"><Vault size={18} /> Your insured collection</span>
-          <h1>Vault</h1>
-          <p>Select up to three cards to start a route. Every item below is independently custody verified.</p>
+          <span className="page-kicker"><Vault size={18} /> Your insured Pokémon collection</span>
+          <h1>Pokémon Vault</h1>
+          <p>Select up to three graded Pokémon cards to start a route. Every slab below is authenticated and independently custody verified.</p>
         </div>
         <button className="primary-button compact-button" disabled={!selected.length} onClick={() => onCreateRoute(selected)}>
           Create route with {selected.length} {selected.length === 1 ? "card" : "cards"} <ArrowRight size={18} />
@@ -632,16 +636,16 @@ function HelpPanel({ onClose }: { onClose: () => void }) {
     <div className="drawer-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <aside className="help-panel" role="dialog" aria-modal="true" aria-labelledby="help-title">
         <div className="drawer-title"><div><span className="page-kicker"><Question size={17} /> Quick guide</span><h2 id="help-title">How GrailRoute works</h2></div><button className="icon-button" onClick={onClose} aria-label="Close guide"><X size={21} /></button></div>
-        <p className="help-intro">Trade the cards you own for the cards you want—without selling each one first.</p>
+        <p className="help-intro">Trade the Pokémon cards you own for the chase card you want—without selling each slab first.</p>
         {[
-          [<Vault key="vault" size={21} />, "Vault your cards", "Eligible graded cards are authenticated, insured, and represented 1:1 onchain."],
-          [<MagnifyingGlass key="search" size={21} />, "Choose your grail", "Pick a target and set the cards or USDG you’re comfortable offering."],
-          [<CirclesThreePlus key="route" size={21} />, "We find the path", "GrailRoute searches direct swaps and multi-party loops across verified collections."],
+          [<Vault key="vault" size={21} />, "Vault your Pokémon cards", "Eligible PSA-graded Pokémon TCG cards are authenticated, insured, and represented 1:1 onchain."],
+          [<MagnifyingGlass key="search" size={21} />, "Choose your Pokémon grail", "Pick the exact Pokémon, set, card number, and grade you want, then choose what you’re comfortable offering."],
+          [<CirclesThreePlus key="route" size={21} />, "We find the path", "GrailRoute searches direct swaps and multi-party loops across verified Pokémon TCG collections."],
           [<ShieldCheck key="settle" size={21} />, "Settle together", "Every leg completes atomically. If one leg fails, nothing moves."],
         ].map(([icon, title, text], index) => (
           <div className="help-step" key={String(title)}><span>{icon}</span><div><em>0{index + 1}</em><strong>{title}</strong><p>{text}</p></div></div>
         ))}
-        <div className="help-callout"><Sparkle size={18} weight="fill" /><div><strong>New collector?</strong><p>Start in Discover and set one card as your target. We’ll guide the rest.</p></div></div>
+        <div className="help-callout"><Sparkle size={18} weight="fill" /><div><strong>New to Pokémon collecting?</strong><p>Start in Discover with a favorite Pokémon or expansion, then set one graded card as your target.</p></div></div>
         <button className="primary-button" onClick={onClose}>Got it</button>
       </aside>
     </div>
@@ -707,7 +711,7 @@ export default function Home() {
       <footer className="site-footer">
         <span><span className="live-dot" /> Robinhood Chain testnet · All systems operational</span>
         <nav><button onClick={() => setHelpOpen(true)}>Help</button><button>Terms</button><button>Privacy</button><button>Status</button></nav>
-        <span>Unofficial collector prototype · Not affiliated with Pokémon or Robinhood.</span>
+        <span>Independent third-party Pokémon TCG marketplace · Pokémon trademarks belong to their respective owners.</span>
       </footer>
 
       {builderOpen && <BuilderDrawer target={selectedTarget} initialOffers={selectedOffers} onClose={() => setBuilderOpen(false)} onUpdate={() => { setBuilderOpen(false); setActiveView("routes"); setToast("Route updated. We found a 97% match."); window.setTimeout(() => setToast(null), 5000); }} />}

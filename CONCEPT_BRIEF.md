@@ -148,10 +148,11 @@ This section is product-risk framing, not legal advice.
 
 ### Pokémon and Robinhood IP
 
-- Pokémon’s current support guidance asks projects not to use or associate Pokémon characters, names, designs, or other IP with a project.
-- Launch under a neutral, multi-collectible brand. Treat Pokémon as one resale category of authentic third-party goods, subject to counsel’s advice.
-- Do not use Pokémon character art, logos, card backs, sounds, trade dress, or “official” language in the brand or promotional creative without a license.
-- Do not imply Robinhood endorsement. Obtain approval before using “Robin,” Robinhood logos, the feather mark, or Robinhood-like visual trade dress.
+- Position GrailRoute clearly as an independent third-party Pokémon TCG marketplace.
+- Use Pokémon, character, set, card-number, rarity, and grading references descriptively so collectors can identify the authentic products being traded.
+- Use real scans or photography of authenticated inventory where the platform, vault, seller, or data partner has the necessary image rights.
+- Keep GrailRoute’s own wordmark and product identity distinct; do not imply an official Pokémon or Robinhood partnership without written authorization.
+- Do not imply Robinhood endorsement. Obtain approval before using Robinhood logos, the feather mark, or official product language.
 - Card-page photography, metadata, search, and resale use still require an IP review; physical ownership does not automatically grant reproduction rights in card artwork.
 
 ### Asset structure
@@ -200,7 +201,7 @@ Success gate: at least 30% of interviewees submit a real collection and target; 
 ### Days 16–45: testnet concierge prototype
 
 - Create embedded smart accounts and sponsor testnet gas.
-- Mint 20 clearly marked demo titles tied to test inventory or non-Pokémon placeholders.
+- Mint 20 clearly marked demo titles tied to authenticated Pokémon TCG test inventory.
 - Ship asset pages, custody status, fixed offers, route creation, and atomic testnet settlement.
 - Keep custody updates administratively controlled with a visible audit log.
 
@@ -251,4 +252,3 @@ The smallest credible product is:
 - Courtyard product site: https://courtyard.io/
 - Collector Crypt product site: https://collectorcrypt.com/
 - PSA Vault overview: https://www.psacard.com/info/psa-vault
-

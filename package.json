@@ -23,13 +23,13 @@
   "dependencies": {
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
     "@phosphor-icons/react": "^2.1.10",
-    "drizzle-orm": "0.45.2",
     "next": "16.2.6",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",
+    "drizzle-orm": "0.45.2",
     "@cloudflare/workers-types": "^4.20260702.1",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@tailwindcss/postcss": "4.2.1",
